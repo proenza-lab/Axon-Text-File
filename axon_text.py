@@ -26,14 +26,21 @@ import numpy as np
 
 # functions
 
-def read():
-    """ read the information of an ATF file into a list """
-    pass
+def read(in_file='atf'):
+    """ read an ATF file into a list """
+    with open(in_file, 'r') as in_data:
+        pass
 
-def write():
-    """ write the information of a list into an ATF file """
-    pass
+def write(out_file='atf'):
+    """ write a list into an ATF file """
+    with open(out_file, 'w') as out_data:
+        pass
 
-def merge():
-    """ merge two ATF files with the option of continous data records """
-    pass
+def merge(in_file1='atf', in_file2='atf', outfile='atf'):
+    """ merge two ATF files into one ATF file """
+    with open(in_file1, 'r') as in_data1:
+        pass
+    with open(in_file2, 'r') as in_data2:
+        pass
+    with open(out_file, 'w') as out_data:
+        pass
