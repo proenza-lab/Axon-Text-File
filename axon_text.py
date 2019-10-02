@@ -44,3 +44,7 @@ def merge(in_file1='atf', in_file2='atf', outfile='atf'):
         pass
     with open(out_file, 'w') as out_data:
         pass
+
+if __name__ == "__main__":  # make file usable as script
+    pass
+    
