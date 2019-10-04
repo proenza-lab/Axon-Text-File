@@ -27,17 +27,20 @@ import numpy as np
 # functions
 
 def read(in_file='atf'):
-    """ read an ATF file into a list """
-    with open(in_file, 'r') as in_data:
-        pass
+    """ read an atf file into a numpy array """
+    try:
+        with open(in_file, 'r') as in_data:
+            pass
+    except FileNotFoundError:
+        raise
 
 def write(out_file='atf'):
-    """ write a list into an ATF file """
+    """ write a numpy array into an atf file """
     with open(out_file, 'w') as out_data:
         pass
 
 def merge(in_file1='atf', in_file2='atf', outfile='atf'):
-    """ merge two ATF files into one ATF file """
+    """ merge two atf files into one atf file """
     with open(in_file1, 'r') as in_data1:
         pass
     with open(in_file2, 'r') as in_data2:
@@ -45,6 +48,6 @@ def merge(in_file1='atf', in_file2='atf', outfile='atf'):
     with open(out_file, 'w') as out_data:
         pass
 
-if __name__ == "__main__":  # make file usable as script
+if __name__ == "__main__":  # stand-alone execution
     pass
     
