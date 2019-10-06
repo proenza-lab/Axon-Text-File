@@ -26,13 +26,20 @@ import numpy as np
 
 # functions
 
-def read(in_file='atf'):
+def read(in_file='example.atf'):
     """ read an atf file into a numpy array """
     try:
         with open(in_file, 'r') as in_data:
-            pass
+            full_record = []  # python list
+            full_record.append(in_data.readline().split())  # first record
+            full_record.append(in_data.readline().split())  # second record
+            full_record.append([in_data.readline() for line in range(0, int(full_record[1][0]))])  # optional record
+            full_record.append(np.genfromtxt(in_data, delimiter="\t", names=True, autostrip=True))  # data record
+            full_record = np.array(full_record)  # numpy array
     except FileNotFoundError:
         raise
+    else:
+        return full_record
 
 def write(out_file='atf'):
     """ write a numpy array into an atf file """
