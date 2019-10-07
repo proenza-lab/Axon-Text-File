@@ -26,34 +26,49 @@ import numpy as np
 
 # functions
 
-def read(in_file='example.atf'):
+def read(in_file='atf'):
     """ read an atf file into a numpy array """
     try:
         with open(in_file, 'r') as in_data:
             full_record = []  # python list
-            full_record.append(in_data.readline().split())  # first record
-            full_record.append(in_data.readline().split())  # second record
-            full_record.append([in_data.readline() for line in range(0, int(full_record[1][0]))])  # optional record
-            full_record.append(np.genfromtxt(in_data, delimiter="\t", names=True, autostrip=True))  # data record
+            for _ in range(0, 2):
+                full_record.append(in_data.readline().strip().split())  # first and second record
+            full_record.append([in_data.readline().strip() for line in range(0, int(full_record[1][0]))])  # optional record
+            full_record.append(in_data.readline().strip().split('\t'))  # title record
+            full_record.append(np.genfromtxt(in_data, delimiter='\t', autostrip=True))  # data record
             full_record = np.array(full_record)  # numpy array
     except FileNotFoundError:
+        print("Error! File not found.")
         raise
     else:
         return full_record
 
-def write(out_file='atf'):
+def write(out_file='atf', out_record=np.zeros((4,))):
     """ write a numpy array into an atf file """
-    with open(out_file, 'w') as out_data:
-        pass
+    try:
+        with open(out_file, 'w') as out_data:
+            for array in out_record[0:2]:  # first and second record
+                for element in array[0:-1]:
+                    out_data.write(str(element) + '\t')
+                out_data.write(str(array[-1] + '\n'))
+            for array in out_record[2]:  # optional record
+                out_data.write(str(array) + '\n')
+            for element in out_record[3][0:-1]:  # title record
+                out_data.write(str(element) + '\t')
+            out_data.write(str(out_record[3][-1]) + '\n')
+            np.savetxt(out_data, np.stack(out_record[4]), fmt='%.7f', delimiter='\t')
+    except PermissionError:
+        print("Error! No file permission.")
+        raise
 
-def merge(in_file1='atf', in_file2='atf', outfile='atf'):
-    """ merge two atf files into one atf file """
-    with open(in_file1, 'r') as in_data1:
-        pass
-    with open(in_file2, 'r') as in_data2:
-        pass
-    with open(out_file, 'w') as out_data:
-        pass
+# def merge(in_file1='atf', in_file2='atf', out_file='atf'):
+#     """ merge two atf files into one atf file """
+#     with open(in_file1, 'r') as in_data1:
+#         pass
+#     with open(in_file2, 'r') as in_data2:
+#         pass
+#     with open(out_file, 'w') as out_data:
+#         pass
 
 if __name__ == "__main__":  # stand-alone execution
     pass
