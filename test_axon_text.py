@@ -47,6 +47,10 @@ class FileObjectCase(unittest.TestCase):
 class DataTypeObject(unittest.TestCase):
     """ test for data errors """
 
+    def setUp(self):
+        """ initialization for each test method """
+        self.axon_data = axon_text.read(in_file='data.atf')
+
     def tearDown(self):
         """ termination for each test method """
         try:
@@ -56,17 +60,24 @@ class DataTypeObject(unittest.TestCase):
 
     def test_read_data_case(self):
         """ test for data read errors """
-        axon_data = axon_text.read(in_file='data.atf')
-        self.assertIsInstance(axon_data, np.ndarray)
-        self.assertEqual(axon_data.shape, (5,))
+        self.assertIsInstance(self.axon_data, np.ndarray)
+        self.assertEqual(self.axon_data.shape, (5,))
 
     def test_write_data_case(self):
         """ test for data write errors """
-        axon_data = axon_text.read(in_file='data.atf')
-        axon_text.write(out_file='copy.atf', out_record=axon_data)
+        axon_text.write(out_file='copy.atf', out_record=self.axon_data)
         axon_copy = axon_text.read(in_file='copy.atf')
-        self.assertEqual(axon_data[0:3].tolist(), axon_copy[0:3].tolist())  # string data
-        nptest.assert_allclose(axon_data[4], axon_copy[4])  # numerical data
+        self.assertEqual(self.axon_data[0:3].tolist(), axon_copy[0:3].tolist())  # string data
+        nptest.assert_allclose(self.axon_data[4], axon_copy[4])  # numerical data
+
+    def test_merge_data_class(self):
+        """ test for data merge errors """
+        axon_merge = axon_text.merge(in_file1='data.atf', in_file2='data.atf', out_file='merge.atf')
+        self.assertIsInstance(axon_merge, np.ndarray)
+        self.assertEqual(self.axon_data.shape, (5,))
+        self.assertEqual(axon_merge[1][1], axon_merge[4][1].size)
+        self.assertEqual(axon_merge[1][1], axon_merge[4][-1].size)
+        self.assertEqual(axon_merge[4].size, 2*self.axon_data[4].size)
 
 # functions
 

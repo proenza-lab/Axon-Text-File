@@ -61,14 +61,9 @@ def write(out_file='atf', out_record=np.zeros((4,))):
         print("Error! No file permission.")
         raise
 
-# def merge(in_file1='atf', in_file2='atf', out_file='atf'):
-#     """ merge two atf files into one atf file """
-#     with open(in_file1, 'r') as in_data1:
-#         pass
-#     with open(in_file2, 'r') as in_data2:
-#         pass
-#     with open(out_file, 'w') as out_data:
-#         pass
+def merge(in_file1='atf', in_file2='atf', out_file='atf'):
+    """ merge two atf files into one atf file """
+    return np.zeros((5,))
 
 if __name__ == "__main__":  # stand-alone execution
     pass
