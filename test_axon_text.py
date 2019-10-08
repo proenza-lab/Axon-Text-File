@@ -72,11 +72,15 @@ class DataTypeObject(unittest.TestCase):
 
     def test_merge_data_class(self):
         """ test for data merge errors """
-        axon_merge = axon_text.merge(in_file1='data.atf', in_file2='data.atf', out_file='merge.atf')
+        merge_data = []
+        axon_merge = axon_text.merge(in_record_1=self.axon_data, in_record_2=self.axon_data)
+        self.assertRaises(IndexError, axon_text.merge, np.zeros((1,)), np.zeros((2,)))
         self.assertIsInstance(axon_merge, np.ndarray)
         self.assertEqual(self.axon_data.shape, (5,))
-        self.assertEqual(axon_merge[1][1], axon_merge[4][1].size)
-        self.assertEqual(axon_merge[1][1], axon_merge[4][-1].size)
+        self.assertEqual(axon_merge[1][0], axon_merge[2].size)  # optional record
+        self.assertEqual(axon_merge[1][1], axon_merge[3].size)  # title record 
+        self.assertEqual(axon_merge[1][1], axon_merge[4][1].size)  # first data record
+        self.assertEqual(axon_merge[1][1], axon_merge[4][-1].size)  # last data record
         self.assertEqual(axon_merge[4].size, 2*self.axon_data[4].size)
 
 # functions

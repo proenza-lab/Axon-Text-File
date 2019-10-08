@@ -41,9 +41,9 @@ def read(in_file='atf'):
         print("Error! File not found.")
         raise
     else:
-        return full_record
+        return full_record  # ndarray.shape == (5,)
 
-def write(out_file='atf', out_record=np.zeros((4,))):
+def write(out_file='atf', out_record=np.zeros((5,))):
     """ write a numpy array into an atf file """
     try:
         with open(out_file, 'w') as out_data:
@@ -61,9 +61,16 @@ def write(out_file='atf', out_record=np.zeros((4,))):
         print("Error! No file permission.")
         raise
 
-def merge(in_file1='atf', in_file2='atf', out_file='atf'):
+def merge(in_record_1=np.zeros((5,)), in_record_2=np.zeros((5,))):
     """ merge two atf files into one atf file """
-    return np.zeros((5,))
+    try:
+        in_record_1[4]
+        in_record_2[4]
+    except IndexError:
+        print("Error! Array too small.")
+        raise
+    else:
+        return np.zeros((5,))
 
 if __name__ == "__main__":  # stand-alone execution
     pass
