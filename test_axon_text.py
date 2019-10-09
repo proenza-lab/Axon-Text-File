@@ -77,10 +77,11 @@ class DataTypeObject(unittest.TestCase):
         self.assertRaises(IndexError, axon_text.merge, np.zeros((1,)), np.zeros((2,)))
         self.assertIsInstance(axon_merge, np.ndarray)
         self.assertEqual(self.axon_data.shape, (5,))
-        self.assertEqual(axon_merge[1][0], axon_merge[2].size)  # optional record
-        self.assertEqual(axon_merge[1][1], axon_merge[3].size)  # title record 
-        self.assertEqual(axon_merge[1][1], axon_merge[4][1].size)  # first data record
-        self.assertEqual(axon_merge[1][1], axon_merge[4][-1].size)  # last data record
+        self.assertEqual(axon_merge[0].tolist(), ["ATF", "1.0"])
+        self.assertEqual(int(axon_merge[1][0]), axon_merge[2].size)  # optional record
+        self.assertEqual(int(axon_merge[1][1]), axon_merge[3].size)  # title record 
+        self.assertEqual(int(axon_merge[1][1]), axon_merge[4][1].size)  # first data record
+        self.assertEqual(int(axon_merge[1][1]), axon_merge[4][-1].size)  # last data record
         self.assertEqual(axon_merge[4].size, 2*self.axon_data[4].size)
 
 # functions

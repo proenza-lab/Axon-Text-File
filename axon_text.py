@@ -63,14 +63,29 @@ def write(out_file='atf', out_record=np.zeros((5,))):
 
 def merge(in_record_1=np.zeros((5,)), in_record_2=np.zeros((5,))):
     """ merge two atf files into one atf file """
+    merge_record = []
+    merge_record.append(["ATF", "1.0"])
+    optional_comment = in_record_1[2]
+    optional_comment.append(in_record_2[2])
+    optional_comment.append(in_record_1[3])  # first title record as comment
+    comment_lines = str(len(optional_comment))
+    title_record = in_record_2[3]
+    record_columns = str(len(in_record_1[3]) if len(in_record_1[3]) >= len(in_record_2[3]) else in_record_2[3])
+    merge_record.append([comment_lines, record_columns])
+    merge_record.append(in_record_2[3])
+
+    # expand arrays if necessary
+
+
+    merge_record = np.array(merge_record)  # numpy array
+    print(merge_record)
     try:
-        in_record_1[4]
-        in_record_2[4]
+        pass
     except IndexError:
         print("Error! Array too small.")
         raise
     else:
-        return np.zeros((5,))
+        return merge_record
 
 if __name__ == "__main__":  # stand-alone execution
     pass
