@@ -80,7 +80,6 @@ def merge(in_record_1=np.zeros((5,)), in_record_2=np.zeros((5,))):
         merge_record.append(np.zeros(1))
     else:
         merge_record.append(np.concatenate((in_record_1[4], in_record_2[4])))
-    write(out_file="bla.atf", out_record=np.array(merge_record))
     return np.array(merge_record)
 
 if __name__ == "__main__":  # stand-alone execution
