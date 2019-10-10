@@ -36,12 +36,11 @@ def read(in_file='atf'):
             full_record.append([in_data.readline().strip() for line in range(0, int(full_record[1][0]))])  # optional record
             full_record.append(in_data.readline().strip().split('\t'))  # title record
             full_record.append(np.genfromtxt(in_data, delimiter='\t', autostrip=True))  # data record
-            full_record = np.array(full_record)  # numpy array
     except FileNotFoundError:
         print("Error! File not found.")
         raise
     else:
-        return full_record  # ndarray.shape == (5,)
+        return np.array(full_record)  # ndarray.shape == (5,)
 
 def write(out_file='atf', out_record=np.zeros((5,))):
     """ write a numpy array into an atf file """
@@ -69,23 +68,21 @@ def merge(in_record_1=np.zeros((5,)), in_record_2=np.zeros((5,))):
     optional_comment.append(in_record_2[2])
     optional_comment.append(in_record_1[3])  # first title record as comment
     comment_lines = str(len(optional_comment))
-    title_record = in_record_2[3]
     record_columns = str(len(in_record_1[3]) if len(in_record_1[3]) >= len(in_record_2[3]) else in_record_2[3])
     merge_record.append([comment_lines, record_columns])
-    merge_record.append(in_record_2[3])
-
-    # expand arrays if necessary
-
-
-    merge_record = np.array(merge_record)  # numpy array
-    print(merge_record)
+    merge_record.append(optional_comment)
+    merge_record.append(in_record_2[3])  # second title record before data record
+    data_rows_1, _ = in_record_1[4].shape
+    data_rows_2, _ = in_record_2[4].shape
     try:
-        pass
+        if data_rows_1 != data_rows_2:
+            raise IndexError
     except IndexError:
-        print("Error! Array too small.")
-        raise
+        print("Error! Array shapes incompatible.")
+        merge_record.append(np.zeros(1))
     else:
-        return merge_record
+        merge_record.append(np.concatenate((in_record_1[4], in_record_2[4])))
+    return np.array(merge_record)
 
 if __name__ == "__main__":  # stand-alone execution
     pass
