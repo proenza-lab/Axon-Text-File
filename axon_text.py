@@ -63,15 +63,13 @@ def write(out_file='atf', out_record=np.zeros((5,))):
 def merge(in_record_1=np.zeros((5,)), in_record_2=np.zeros((5,))):
     """ merge two atf files into one atf file """
     merge_record = []
-    merge_record.append(["ATF", "1.0"])
-    optional_comment = in_record_1[2]
-    optional_comment.append(in_record_2[2])
-    optional_comment.append(in_record_1[3])  # first title record as comment
-    comment_lines = str(len(optional_comment))
-    record_columns = str(len(in_record_1[3]) if len(in_record_1[3]) >= len(in_record_2[3]) else in_record_2[3])
-    merge_record.append([comment_lines, record_columns])
-    merge_record.append(optional_comment)
-    merge_record.append(in_record_2[3])  # second title record before data record
+    merge_record.append(["ATF", "1.0"])  # first record
+    optional_record = in_record_1[2], in_record_2[2], in_record_1[3]
+    record_comment = str(len(optional_record))
+    record_column = str(len(in_record_1[3]) if len(in_record_1[3]) >= len(in_record_2[3]) else in_record_2[3])
+    merge_record.append([record_comment, record_column])  # second record
+    merge_record.append(optional_record)  # optional record
+    merge_record.append(in_record_2[3])  # title record
     data_rows_1, _ = in_record_1[4].shape
     data_rows_2, _ = in_record_2[4].shape
     try:
@@ -82,6 +80,7 @@ def merge(in_record_1=np.zeros((5,)), in_record_2=np.zeros((5,))):
         merge_record.append(np.zeros(1))
     else:
         merge_record.append(np.concatenate((in_record_1[4], in_record_2[4])))
+    write(out_file="bla.atf", out_record=np.array(merge_record))
     return np.array(merge_record)
 
 if __name__ == "__main__":  # stand-alone execution
