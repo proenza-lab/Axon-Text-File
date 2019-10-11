@@ -68,8 +68,8 @@ class DataTypeObject(unittest.TestCase):
         """ test for data write errors """
         axon_text.write(out_file='copy.atf', out_record=self.axon_data)
         axon_copy = axon_text.read(in_file='copy.atf')
-        self.assertEqual(self.axon_data[0:3].tolist(), axon_copy[0:3].tolist())  # string data
-        nptest.assert_allclose(self.axon_data[4], axon_copy[4])  # numerical data
+        self.assertEqual(self.axon_data[0:3].tolist(), axon_copy[0:3].tolist())  # python string list
+        nptest.assert_array_equal(self.axon_data[4], axon_copy[4])  # numpy string array
 
     def test_merge_data_class(self):
         """ test for data merge errors """

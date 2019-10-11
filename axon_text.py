@@ -36,7 +36,7 @@ def read(in_file='atf'):
                 full_record.append(in_data.readline().strip().split())  # first and second record
             full_record.append([in_data.readline().strip() for line in range(0, int(full_record[1][0]))])  # optional record
             full_record.append([in_data.readline().strip().split('\t')])  # title record
-            full_record.append(np.genfromtxt(in_data, delimiter='\t', autostrip=True))  # data record
+            full_record.append(np.genfromtxt(in_data, dtype='str', delimiter='\t', autostrip=True))  # data record
     except FileNotFoundError:
         print("Error! File not found.")
         raise
@@ -57,7 +57,7 @@ def write(out_file='atf', out_record=np.zeros((5,))):
                 for element in array[0:-1]:
                     out_data.write(str(element) + '\t')
                 out_data.write(str(array[-1]) + '\n')
-            np.savetxt(out_data, np.stack(out_record[4]), fmt='%.7f', delimiter='\t')
+            np.savetxt(out_data, np.stack(out_record[4]), fmt='%s', delimiter='\t')
     except PermissionError:
         print("Error! No file permission.")
         raise
