@@ -64,18 +64,15 @@ def merge(in_record_1=np.zeros((5,)), in_record_2=np.zeros((5,))):
     """ merge two atf files into one atf file """
     merge_record = []
     merge_record.append(["ATF", "1.0"])  # first record
-    optional_record = in_record_1[2], in_record_2[2], in_record_1[3]
+    optional_record = in_record_1[2] + in_record_2[2]
     record_comment = str(len(optional_record))
     record_column = str(len(in_record_1[3]) if len(in_record_1[3]) >= len(in_record_2[3]) else in_record_2[3])
     merge_record.append([record_comment, record_column])  # second record
     merge_record.append(optional_record)  # optional record
     merge_record.append(in_record_2[3])  # title record
-    data_rows_1, _ = in_record_1[4].shape
+    data_rows_1, _ = in_record_1[4].shape  # rows, columns
     data_rows_2, _ = in_record_2[4].shape
-    try:
-        if data_rows_1 != data_rows_2:
-            raise IndexError
-    except IndexError:
+    if data_rows_1 != data_rows_2:  # avoid memory-intensive reshaping
         print("Error! Array shapes incompatible.")
         merge_record.append(np.zeros(1))
     else:

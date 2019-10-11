@@ -35,14 +35,15 @@ import axon_text
 class FileObjectCase(unittest.TestCase):
     """ test for file object errors """
 
-    def setUp(self):
-        """ initialization for each test method """
-        self.mock_path = os.path.join("")
-        self.mock_file = Mock(spec=io.StringIO, return_value=self.mock_path)
-
     def test_read_file_case(self):
         """ test read file object errors """
-        self.assertRaises(FileNotFoundError, axon_text.read, self.mock_file())
+        mock_path = os.path.join("")
+        mock_file = Mock(spec=io.StringIO, return_value=mock_path)
+        self.assertRaises(FileNotFoundError, axon_text.read, mock_file())  # mock file oject as source
+
+    def test_write_file_case(self):
+        """ test write file object errors """
+        self.assertRaises(PermissionError, axon_text.write, out_file='.')  # current directory as target
 
 class DataTypeObject(unittest.TestCase):
     """ test for data errors """
@@ -73,6 +74,7 @@ class DataTypeObject(unittest.TestCase):
     def test_merge_data_class(self):
         """ test for data merge errors """
         axon_merge = axon_text.merge(in_record_1=self.axon_data, in_record_2=self.axon_data)
+        axon_text.write("merged.atf", axon_merge)
         self.assertRaises(IndexError, axon_text.merge, np.zeros((1,)), np.zeros((2,)))
         self.assertIsInstance(axon_merge, np.ndarray)
         self.assertEqual(self.axon_data.shape, (5,))
