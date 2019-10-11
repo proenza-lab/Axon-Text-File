@@ -21,6 +21,7 @@ Version 1.0
 """
 
 # imports
+import warnings
 import numpy as np
 
 
@@ -34,7 +35,7 @@ def read(in_file='atf'):
             for _ in range(0, 2):
                 full_record.append(in_data.readline().strip().split())  # first and second record
             full_record.append([in_data.readline().strip() for line in range(0, int(full_record[1][0]))])  # optional record
-            full_record.append(in_data.readline().strip().split('\t'))  # title record
+            full_record.append([in_data.readline().strip().split('\t')])  # title record
             full_record.append(np.genfromtxt(in_data, delimiter='\t', autostrip=True))  # data record
     except FileNotFoundError:
         print("Error! File not found.")
@@ -52,32 +53,35 @@ def write(out_file='atf', out_record=np.zeros((5,))):
                 out_data.write(str(array[-1] + '\n'))
             for array in out_record[2]:  # optional record
                 out_data.write(str(array) + '\n')
-            for element in out_record[3][0:-1]:  # title record
-                out_data.write(str(element) + '\t')
-            out_data.write(str(out_record[3][-1]) + '\n')
+            for array in out_record[3]:  # title record
+                for element in array[0:-1]:
+                    out_data.write(str(element) + '\t')
+                out_data.write(str(array[-1]) + '\n')
             np.savetxt(out_data, np.stack(out_record[4]), fmt='%.7f', delimiter='\t')
     except PermissionError:
         print("Error! No file permission.")
         raise
 
 def merge(in_record_1=np.zeros((5,)), in_record_2=np.zeros((5,))):
-    """ merge two atf files into one atf file """
-    merge_record = []
-    merge_record.append(["ATF", "1.0"])  # first record
-    optional_record = in_record_1[2] + in_record_2[2]
-    record_comment = str(len(optional_record))
-    record_column = str(len(in_record_1[3]) if len(in_record_1[3]) >= len(in_record_2[3]) else in_record_2[3])
-    merge_record.append([record_comment, record_column])  # second record
-    merge_record.append(optional_record)  # optional record
-    merge_record.append(in_record_2[3])  # title record
-    data_rows_1, _ = in_record_1[4].shape  # rows, columns
-    data_rows_2, _ = in_record_2[4].shape
-    if data_rows_1 != data_rows_2:  # avoid memory-intensive reshaping
-        print("Error! Array shapes incompatible.")
-        merge_record.append(np.zeros(1))
+    """ merge two numpy arrays into one numpy array """
+    title_columns_1 = str(len(in_record_1[3][0]))
+    title_columns_2 = str(len(in_record_2[3][0]))
+    _, data_columns_1 = in_record_1[4].shape  # rows, columns
+    _, data_columns_2 = in_record_2[4].shape
+    if title_columns_1 != title_columns_2 or data_columns_1 != data_columns_2:
+        warnings.warn("Warning! Incompatible arrays.")
+        merge_result = None
     else:
+        optional_record = in_record_1[2] + in_record_2[2]
+        comment_rows = str(len(optional_record) + 1)
+        merge_record = []
+        merge_record.append(["ATF", "1.0"])  # first record
+        merge_record.append([comment_rows, title_columns_1])  # second record
+        merge_record.append(optional_record)  # optional record
+        merge_record.append(in_record_1[3] + in_record_2[3])  # title record
         merge_record.append(np.concatenate((in_record_1[4], in_record_2[4])))
-    return np.array(merge_record)
+        merge_result = np.array(merge_record)
+    return merge_result
 
 if __name__ == "__main__":  # stand-alone execution
     pass
