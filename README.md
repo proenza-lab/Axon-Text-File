@@ -1,8 +1,8 @@
 # Axon-Text-File
  Python module for common tasks involving the Axon Text File format ([ATF](https://mdc.custhelp.com/app/answers/detail/a_id/18883/~/genepix%C2%AE-file-formats#atf)) from Molecular Devices
 
-The ATF format module provides very basic Python functions for the reading, writing, and merging of Axon Text Files  from Molecular Devices. For reasons of memory-efficiency and compatibility with different experimental setups, the information is stored in a single NumPy array with subarrays representing the individual records - individual data is represented as strings.
-If you know that your data records are numerical, you can easily change the ```dtype``` parameters for ```np.genfromtxt``` and ```np.savetxt``` to a numerical representation for futher calculations.
+The ATF format module provides very basic Python functions for the reading, writing, and merging of Axon Text Files  from Molecular Devices. For reasons of memory-efficiency and compatibility with different experimental setups, the information is stored in a single NumPy array with subarrays representing the format-specific records - individual data is represented as strings by default.
+If you know that your data records are exclusively numerical, you can easily change the ```dtype``` parameters for ```np.genfromtxt``` and ```np.savetxt``` to a numerical representation (see in-line comments) for futher calculations.
 
 The ATF format unittest module was the basis for the test-driven development ([TDD](https://en.wikipedia.org/wiki/Test-driven_development)) process.
 
