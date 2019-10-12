@@ -1,5 +1,5 @@
 """
-Axon Text File (ATF) format module - unittest module
+Axon Text File (ATF) format unittest module
 Copyright (C) 2019 Christian Rickert <mail@crickert.de>
 
 This program is free software; you can redistribute it and/or
@@ -66,14 +66,14 @@ class DataTypeObject(unittest.TestCase):
 
     def test_write_data_case(self):
         """ test for data write errors """
-        axon_text.write(out_file='copy.atf', out_record=self.axon_data)
+        axon_text.write(out_file='copy.atf', out_atf=self.axon_data)
         axon_copy = axon_text.read(in_file='copy.atf')
         self.assertEqual(self.axon_data[0:3].tolist(), axon_copy[0:3].tolist())  # python string list
         nptest.assert_array_equal(self.axon_data[4], axon_copy[4])  # numpy string array
 
     def test_merge_data_class(self):
         """ test for data merge errors """
-        axon_merge = axon_text.merge(in_record_1=self.axon_data, in_record_2=self.axon_data)
+        axon_merge = axon_text.merge(in_atf_1=self.axon_data, in_atf_2=self.axon_data)
         self.assertRaises(IndexError, axon_text.merge, np.zeros((1,)), np.zeros((2,)))
         self.assertIsInstance(axon_merge, np.ndarray)
         self.assertEqual(self.axon_data.shape, (5,))

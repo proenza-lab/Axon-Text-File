@@ -36,50 +36,52 @@ def read(in_file='atf'):
                 full_record.append(in_data.readline().strip().split())  # first and second record
             full_record.append([in_data.readline().strip() for line in range(0, int(full_record[1][0]))])  # optional record
             full_record.append([in_data.readline().strip().split('\t')])  # title record
-            full_record.append(np.genfromtxt(in_data, dtype='str', delimiter='\t', autostrip=True))  # data record
+            full_record.append(np.genfromtxt(in_data, dtype='str', delimiter='\t', autostrip=True))  # data record, or: dtype=float
     except FileNotFoundError:
         print("Error! File not found.")
         raise
     else:
         return np.array(full_record)  # ndarray.shape == (5,)
 
-def write(out_file='atf', out_record=np.zeros((5,))):
+def write(out_file='atf', out_atf=np.zeros((5,))):
     """ write a numpy array into an atf file """
     try:
         with open(out_file, 'w') as out_data:
-            for array in out_record[0:2]:  # first and second record
+            for array in out_atf[0:2]:  # first and second record
                 for element in array[0:-1]:
                     out_data.write(str(element) + '\t')
                 out_data.write(str(array[-1] + '\n'))
-            for array in out_record[2]:  # optional record
+            for array in out_atf[2]:  # optional record
                 out_data.write(str(array) + '\n')
-            for array in out_record[3]:  # title record
+            for array in out_atf[3]:  # title record
                 for element in array[0:-1]:
                     out_data.write(str(element) + '\t')
                 out_data.write(str(array[-1]) + '\n')
-            np.savetxt(out_data, np.stack(out_record[4]), fmt='%s', delimiter='\t')
+            np.savetxt(out_data, np.stack(out_atf[4]), fmt='%s', delimiter='\t')  # or: dtype='%.7f'
     except PermissionError:
         print("Error! No file permission.")
         raise
+    else:
+        return 0  # success
 
-def merge(in_record_1=np.zeros((5,)), in_record_2=np.zeros((5,))):
+def merge(in_atf_1=np.zeros((5,)), in_atf_2=np.zeros((5,))):
     """ merge two numpy arrays into one numpy array """
-    title_columns_1 = str(len(in_record_1[3][0]))
-    title_columns_2 = str(len(in_record_2[3][0]))
-    _, data_columns_1 = in_record_1[4].shape  # rows, columns
-    _, data_columns_2 = in_record_2[4].shape
+    title_columns_1 = str(len(in_atf_1[3][0]))
+    title_columns_2 = str(len(in_atf_2[3][0]))
+    _, data_columns_1 = in_atf_1[4].shape  # rows, columns
+    _, data_columns_2 = in_atf_2[4].shape
     if title_columns_1 != title_columns_2 or data_columns_1 != data_columns_2:
         warnings.warn("Warning! Incompatible arrays.")
         merge_result = None
     else:
-        optional_record = in_record_1[2] + in_record_2[2]
+        optional_record = in_atf_1[2] + in_atf_2[2]
         comment_rows = str(len(optional_record) + 1)
         merge_record = []
         merge_record.append(["ATF", "1.0"])  # first record
         merge_record.append([comment_rows, title_columns_1])  # second record
         merge_record.append(optional_record)  # optional record
-        merge_record.append(in_record_1[3] + in_record_2[3])  # title record
-        merge_record.append(np.concatenate((in_record_1[4], in_record_2[4])))
+        merge_record.append(in_atf_1[3] + in_atf_2[3])  # title record
+        merge_record.append(np.concatenate((in_atf_1[4], in_atf_2[4])))
         merge_result = np.array(merge_record)
     return merge_result
 
