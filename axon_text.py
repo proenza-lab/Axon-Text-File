@@ -39,9 +39,11 @@ def read(in_file='atf'):
             full_record.append(np.genfromtxt(in_data, dtype='str', delimiter='\t', autostrip=True))  # data record, or: dtype=float
     except FileNotFoundError:
         print("Error! File not found.")
+        read_result = None
         raise
     else:
-        return np.array(full_record)  # ndarray.shape == (5,)
+        read_result = np.array(full_record)  # ndarray.shape == (5,)
+    return read_result
 
 def write(out_file='atf', out_atf=np.zeros((5,))):
     """ write a numpy array into an atf file """
@@ -60,9 +62,11 @@ def write(out_file='atf', out_atf=np.zeros((5,))):
             np.savetxt(out_data, np.stack(out_atf[4]), fmt='%s', delimiter='\t')  # or: dtype='%.7f'
     except PermissionError:
         print("Error! No file permission.")
+        write_result = None
         raise
     else:
-        return 0  # success
+        write_result = 0  # success
+    return write_result
 
 def merge(in_atf_1=np.zeros((5,)), in_atf_2=np.zeros((5,))):
     """ merge two numpy arrays into one numpy array """
