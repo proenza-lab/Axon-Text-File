@@ -36,7 +36,7 @@ def read(in_file='atf'):
                 full_record.append(in_data.readline().strip().split())  # first and second record
             full_record.append([in_data.readline().strip() for line in range(0, int(full_record[1][0]))])  # optional record
             full_record.append([in_data.readline().strip().split('\t')])  # title record
-            full_record.append(np.genfromtxt(in_data, dtype='str', delimiter='\t', autostrip=True))  # data record, or: dtype=float
+            full_record.append(np.genfromtxt(in_data, dtype='str', delimiter='\t', autostrip=True))  # data record, or: dtype='float'
     except FileNotFoundError:
         print("Error! File not found.")
         read_result = None
