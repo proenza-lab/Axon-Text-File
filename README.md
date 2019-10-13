@@ -16,7 +16,7 @@ Then you can then call the three functions provided by the ATF format module:
 # read an ATF file into a NumPy array
 axon_data = axon_text.read(in_file='data.atf')
 
-# copy a NumPy array into another file
+# write a NumPy array into a file
 axon_text.write(out_file='copy.atf', out_atf=axon_data)
 
 # merge two NumPy arrays into a single NumPy array
